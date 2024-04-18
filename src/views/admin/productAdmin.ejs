@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./block/header.ejs') %>
+
+    <body id="page-top">
+
+        <!-- Page Wrapper -->
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <%- include('./block/nav.ejs') %>
+                <!-- End of Sidebar -->
+
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+
+                    <!-- Main Content -->
+                    <div id="content">
+
+                        <!-- Topbar -->
+                        <%- include('./block/topnav.ejs') %>
+                            <!-- End of Topbar -->
+
+                            <!-- Begin Page Content -->
+                            <div class="container-fluid">
+
+                                <!-- Page Heading -->
+                                <h1 class="h3 mb-2 text-gray-800">Danh sách sản phẩm</h1>
+
+                                <!-- DataTales Example -->
+                                <div class="card shadow mb-4">
+
+                                    <div class="card-header py-3"
+                                        style="text-align: center; display: flex; align-items: center;">
+                                        <div style="width: 50%;"><a href="/admin/product/create"
+                                                style="text-decoration: none;"><i class="fa-solid fa-plus"></i> Thêm sản
+                                                phẩm mới</a></div>
+                                        <form action="/admin/product" method="post"
+                                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                            <div class="input-group"
+                                                style="border: 1px solid black; border-radius: 6px ;">
+                                                <input type="text" class="form-control bg-light border-0 small"
+                                                    placeholder="nhập tên sản phẩm" aria-label="Search"
+                                                    aria-describedby="basic-addon2" name="name" id="nameSearch" <%
+                                                    if(typeof nameSearch !=='undefined' ){ %>
+                                                value="<%=nameSearch%>"
+                                                    <%}%>
+
+                                                        >
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary" type="submit">
+                                                                <i class="fas fa-search fa-sm"></i>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%"
+                                                cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 50%;">Tên sản phẩm</th>
+                                                        <th style="text-align: center;">Giá(VNĐ)</th>
+                                                        <th style="text-align: center;">Số lượng</th>
+                                                        <th style="text-align: center; width: 10%;">Chỉnh sửa</th>
+                                                        <th style="text-align: center; width: 10%;">Sale</th>
+                                                        <th style="text-align: center; width: 10%;">Xóa sản phẩm</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if(typeof products !=='undefined' ){ %>
+                                                        <% products.forEach(prd=> { %>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <%= prd.product.name %>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <%= prd.product.price %>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <%= prd.product.quantity %>
+                                                                </td>
+
+                                                                <td style="text-align: center;">
+
+                                                                    <a href="/admin/product/edit/<%= prd.product.id %>">
+                                                                        <button type="button"
+                                                                            style="border: none; background-color: transparent; width: auto;"
+                                                                            value="">
+
+                                                                            <i style="color:  #858796;"
+                                                                                class="fas fa-pen"></i>
+                                                                        </button>
+                                                                    </a>
+
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <form action=<%=(prd.sale==0) ? ("/admin/addSale") : ("/admin/updateSale") %> method="post">
+                                                                        <input type="hidden" name="product_id" value="<%= prd.product.id %>">
+                                                                        <select class="form-select" aria-label="Default select example" name="discount">
+                                                                            <option value="0">Lựa chọn sale</option>
+                                                                            <% const arr=[20, 30, 50, 90] 
+                                                                                arr.forEach(item=> {
+                                                                                if(prd.sale==item){
+                                                                                %>
+                                                                                <option style="text-align: center;" selected value="<%= item %>">
+                                                                                    <%= item %> %
+                                                                                </option>
+                                                                                <% }else{ %>
+                                                                                    <option style="text-align: center;" value="<%= item %>">
+                                                                                        <%= item %> %
+                                                                                    </option>
+                                                                                    <% } }) %>
+                                                                        </select>
+                                                                        <button type="submit" style="margin-top: 1rem;" class="btn-primary">Xác nhận</button>
+                                                                    </form>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <a href="/admin/product/delete/<%= prd.product.id %>">
+                                                                        <button type="button"
+                                                                            style="border: none; background-color: transparent; width: auto;"
+                                                                            id="btn2"
+                                                                            onclick="return confirm('Bạn có muốn xóa sản phẩm này không')">
+                                                                            <i style="color:  #858796;"
+                                                                                class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </a>
+
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+                                                <% }%>
+
+                                                </tbody>
+
+                                            </table>
+                                            <div id="pagination"
+                                                style="display: flex; justify-content: center; width: 100%;"></div>
+                                            <% if(typeof message !=='undefined' ){ %>
+                                                <p style="width: 100%; text-align: center;">
+                                                    <%=message%>
+                                                </p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <!-- /.container-fluid -->
+
+                    </div>
+                    <!-- End of Main Content -->
+
+                    <!-- Footer -->
+                    <footer class="sticky-footer bg-white">
+                        <div class="container my-auto">
+                            <div class="copyright text-center my-auto">
+                                <span>Copyright &copy; Your Website 2020</span>
+                            </div>
+                        </div>
+                    </footer>
+                    <!-- End of Footer -->
+
+                </div>
+                <!-- End of Content Wrapper -->
+
+        </div>
+        <!-- End of Page Wrapper -->
+
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="login.html">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal delete product -->
+        <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deletemodalLabel">Thông báo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc chắn muốn xóa sản phẩm này không
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteprd()">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('./block/footer.ejs') %>
+    </body>
+    <script>
+        const pageSize = 6;
+            <% if (typeof countProducts !== "undefined") { %>
+                const totalItems = <%= countProducts %>;
+            <% } else { %>
+                const totalItems = 0;
+            <% } %>
+
+            let currentPage = 1;
+        // Tạo nút phân trang
+        function createPaginationButtons() {
+            const totalPages = Math.ceil(totalItems / pageSize);
+            const paginationDiv = document.getElementById("pagination");
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement("a");
+                const nameSearch = document.getElementById("nameSearch");
+                button.href = nameSearch.value != "" ? (`/admin/product/${nameSearch.value}/page/${i}`) : (`/admin/product/page/${i}`);
+
+                button.textContent = i;
+                button.className = "page-link";
+                //button.addEventListener("click", function () {
+                //    currentPage = i;
+                //});
+                paginationDiv.appendChild(button);
+            }
+        }
+
+
+        createPaginationButtons();
+
+    </script>
+
+</html>
