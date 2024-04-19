@@ -15,7 +15,8 @@ router.post("/login", apiAuth.handleLogin);
 router.get("/register", (req, res) => {
   let erro = req.flash("erro");
   let success = req.flash("success");
-  return res.render("user/register.ejs", { success, erro });
+  let modal = "modal";
+  return res.render("user/register.ejs", { success, erro, modal });
 });
 
 router.get("/logout", (req, res) => {

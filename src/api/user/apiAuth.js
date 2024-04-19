@@ -3,16 +3,22 @@ require("dotenv").config();
 
 const handleRegister = async (req, res) => {
   try {
-    let data = await axios.post(process.env.BASE_URL + `register`, req.body);
+    console.log("bd", req.body);
+    let data = await axios.post(process.env.BASE_URL + `user/auth/register`, {
+      email: req.body.email,
+      newPassword: req.body.password,
+      reTypeNewPassword: req.body.reTypePassword,
+    });
+    console.log("bd2", data.data);
+
     console.log(data.data.success);
-    if (data.data.success == true) {
-      req.flash("success", "Đăng ký thành công !");
+    if (data.data.statusCode === 200) {
+      return res.render("/register");
     }
-    return res.redirect("/register");
   } catch (error) {
-    console.log(error);
-    if (error.response.data.detail) {
-      req.flash("erro", `${error.response.data.detail}`);
+    console.log(error.response.data.message);
+    if (error) {
+      req.flash("erro", `${error.response.data.message}`);
     }
     return res.redirect("/register");
   }
@@ -33,9 +39,9 @@ const handleLogin = async (req, res) => {
     }
     return res.redirect("/login");
   } catch (error) {
-    console.log(error.response.data);
+    //console.log(error.response.data.message);
     if (error.response.data.detail) {
-      req.flash("erro", `${error.response.data.detail}`);
+      req.flash("erro", `${error.response.data.message}`);
     }
     return res.redirect("/login");
   }
