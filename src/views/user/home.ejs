@@ -219,7 +219,9 @@
                     <div class="container" style="font-size: 25px;margin-bottom: 40px;">SẢN PHẨM MỚI</div>
                     <div class="container">
                         <div class="row" id="show_product">
-                            <% products.forEach(function(product){ %>
+                            <%
+                            //console.log(products);
+                             products.forEach(function(product){ %>
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="product__item">
                                         <div class="product__item__pic" style="height: 275px;">
@@ -245,11 +247,10 @@
                                     -webkit-line-clamp: 2;
                                     line-height: 1.6rem;
                                     margin-top: 10px;" href="/detail/<%= product.id %>">
-                                                    <%= product.name %>
+                                                    <%= product.productName %>
                                                 </a>
                                             </h6>
                                             <div class="product__price">
-                                                <% product.price=product.price.toLocaleString('vi-VN') %>
                                                     <%= product.price %> đ
                                             </div>
                                         </div>

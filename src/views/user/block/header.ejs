@@ -46,6 +46,7 @@
     }
 
     .dropdown-content {
+        background-color: rgb(73, 59, 59); 
         display: none;
         position: absolute;
         min-width: 160px;
@@ -54,14 +55,14 @@
     }
 
     .dropdown-content a {
-        color: black;
+        color: white;
         padding: 12px 16px;
         text-decoration: none;
         display: block;
     }
 
     .dropdown-content a:hover {
-        background-color: #ddd;
+        background-color: gray;
     }
 
     .dropdown:hover .dropdown-content {
@@ -131,25 +132,18 @@
                     <li>
                         <a href="/" class="navbar-link has-after">Trang Chủ</a>
                     </li>
-
-                    <li class="dropdown">
-                        <a class="navbar-link has-after">Trang Điểm</a>
-                        <div class="dropdown-content">
-                            <a href="">Mắt</a>
-                            <a href="">Mặt</a>
-                            <a href="">Môi</a>
-                        </div>
-                    </li>
-
-                    <li class="dropdown">
-                        <a class="navbar-link has-after">Chăm Sóc Da</a>
-                        <div class="dropdown-content">
-                            <a href="">Sữa Rửa Mặt</a>
-                            <a href="">Tây Trang</a>
-                            <a href="">Kem Dưỡng</a>
-                            <a href="">Serum</a>
-                        </div>
-                    </li>
+                    <% if(categories){
+                        categories.forEach(function(category){ %>
+                            <li class="dropdown">
+                                <a class="navbar-link has-after"><%=category.categoryName%></a>
+                                <div class="dropdown-content">
+                                    <% category.subCategories.forEach(function(subCategory){ %>
+                                        <a href=""><%=subCategory.categoryName%></a>
+                                        <% })%>
+                                </div>
+                            </li>
+                            <%    })
+                    } %>
 
                     <li>
                         <a href="" class="navbar-link has-after">Liên Hệ</a>

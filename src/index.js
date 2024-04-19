@@ -74,6 +74,13 @@ app.use((req, res, next) => {
     res.locals.adminemail = "";
     res.locals.adminaddress = "";
   }
+
+  if (!req.cookies.categories) {
+    res.locals.categories = "";
+  }
+
+  res.locals.categories = req.cookies.categories;
+
   res.locals.UserId = req.cookies.UserId;
   res.locals.name = req.cookies.name;
   res.locals.username = req.cookies.username;

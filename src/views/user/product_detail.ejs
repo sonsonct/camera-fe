@@ -43,10 +43,10 @@
                     <div class="col-lg-6">
                         <div class="product__details__text">
                             <h5>
-                                <%= product.name %>
+                                <%= product.productName %>
                             </h5>
                             <div class="product__details__price">
-                                <% if(product.sales !== null){ %>
+                                <% if(product.sales && product.sales !== null){ %>
                                     <del style="color: gray; font-size: 14px; font-weight: normal;"><%= product.price.toLocaleString('vi-VN') %>đ</del>
                                     <%= Math.round(product.price - (product.price * product.sales.discount/ 100)).toLocaleString('vi-VN')+'đ' %>
                                 <% }else{ %>
@@ -106,7 +106,7 @@
             </div>
             <div style="margin-top: 100px;border-radius: 20px;" class="container">
                 <div style="font-size: 18px;padding-top: 20px;" class="container">ĐÁNH GIÁ SẢN PHẨM</div>
-                <% if(rate.length>0) { %>
+                <% if(rate && rate.length>0) { %>
                     <% rate.forEach(function(item){ %>
                         <div style="margin-top: 20px;">
                             <div class="row">

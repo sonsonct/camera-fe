@@ -2,14 +2,30 @@ const axios = require("axios");
 require("dotenv").config();
 const getProductHome1 = async (req, res) => {
   try {
-    // let dataProducts = await axios.get(process.env.BASE_URL + `products`);
+    let dataProducts = await axios.get(
+      process.env.BASE_URL +
+        `products?page=1&pageSize=6&sortField=createdAt&sortType=-1`
+    );
+
+    let categories = await axios.get(
+      process.env.BASE_URL + `public/categories?page=1&pageSize=4`
+    );
+
+    res.cookie("categories", categories.data.data, {
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    if (dataProducts.data.statusCode !== 200) {
+      dataProducts.data.data = [];
+    }
+    console.log("prd", dataProducts.data.statusCode);
     // let dataProductsSale = await axios.get(
     //   process.env.BASE_URL + `productsSale`
     // );
     //console.log(dataProductsSale.data.product)
     //let products = dataProducts.data.product;
     return res.render("user/home.ejs", {
-      products: [],
+      products: dataProducts.data.data,
       dataProductsSale: [],
     });
   } catch (error) {
@@ -71,15 +87,20 @@ const getProductSearchPage = async (req, res) => {
 const getProductDetail = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await axios.get(process.env.BASE_URL + `products/detail/${id}`);
-    let product = data.data.product;
+    let data = await axios.get(process.env.BASE_URL + `products/${id}`);
+    let data2 = await axios.get(
+      process.env.BASE_URL + `products?categoryId=${data.data.data.categoryId}`
+    );
+    let product = data.data.data;
+    let sameProduct = data2.data.data;
     let rate = data.data.rate;
-    let count_rate = data.data.count_rate;
-    let count_star = data.data.count_star;
+    let count_rate = 5;
+    let count_star = 5;
     //console.log(data.data.sales)
     if (data.data.success !== false) {
       return res.render("user/product_detail.ejs", {
         product: product,
+        sameProduct: sameProduct,
         rate: rate,
         countRate: count_rate,
         countStar: count_star,
