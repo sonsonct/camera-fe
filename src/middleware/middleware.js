@@ -4,14 +4,47 @@ const axios = require("axios");
 
 const checkAuth = async (req, res) => {
   let cookie = req.cookies;
+  console.log(cookie.token);
   let erro = req.flash("erro");
   if (cookie && cookie.token) {
     let token = cookie.token;
-    let check = await apiAuth.handleAuth(token);
-    if (check.detail) {
+    //console.log(token);
+
+    if (!token) {
       return res.render("user/login.ejs", { erro: erro });
     }
-    if (check.success == true) {
+    if (token) {
+      let decoded = verifyToken(token);
+
+      if (decoded) {
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        // console.log(token);
+
+        let getUser = await axios.get(
+          process.env.BASE_URL + `account/myAccount/`,
+          { headers }
+        );
+        //console.log(getUser.data);
+
+        res.cookie("userId", decoded.id, {
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        res.cookie("userName", getUser.data.data.username, {
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        res.cookie("email", getUser.data.data.email, {
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        res.cookie("avatar", getUser.data.data.avarta, {
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+        res.cookie("role", decoded.role, {
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+      }
+
       return res.redirect("/");
     }
   } else {
@@ -25,49 +58,45 @@ const checkRequireLogin = async (req, res, next) => {
   if (cookie && cookie.token) {
     let token = cookie.token;
     let check = await apiAuth.handleAuth(token);
-    if (check.detail) {
+    console.log(check);
+    if (!check) {
       return res.render("user/login.ejs", { erro: erro });
     }
-    if (check.success == true) {
-      next();
-    }
+    next();
   } else {
     return res.render("user/login.ejs", { erro: erro });
   }
 };
 const checkPremission = async (req, res, next) => {
   try {
-  //if (nonSercurePath.includes(req.path)) return next();
-  let cookie = req.cookies;
-  let token = cookie.jwtadmin;
-  //console.log(token)
-  if (!token) {
-    return res.render("success.ejs", {
-      message: "vui long dang nhap vào trang admin",
-      url: "/loginAdmin",
-    });
+    //if (nonSercurePath.includes(req.path)) return next();
+    let cookie = req.cookies;
+    let token = cookie.jwtadmin;
+    //console.log(token)
+    if (!token) {
+      return res.render("success.ejs", {
+        message: "vui long dang nhap vào trang admin",
+        url: "/loginAdmin",
+      });
+    }
+    let decoded = verifyToken(token);
+    //console.log("decode", decoded);
+    if (decoded == null) {
+      return res.render("success.ejs", {
+        message: "Bạn không có quyền truy cập trang Admin",
+        url: "/loginAdmin",
+      });
+    }
+    let role = decoded.role;
 
-  }
-  let decoded = verifyToken(token);
-  console.log('decode',decoded)
-  if (decoded == null) {
-    return res.render("success.ejs", {
-      message: "Bạn không có quyền truy cập trang Admin",
-      url: "/loginAdmin",
-    });
-  }
-  let idUser = decoded.user_id;
-  
-  let getUser = await axios.get(process.env.BASE_URL + `user/${idUser}`);
-  console.log(getUser.data.user.role_id)
-  if (getUser.data.user.role_id == 2) {
-    next();
-  } else {
-    return res.render("success.ejs", {
-      message: "Bạn không có quyền truy cập trang Admin",
-      url: "/loginAdmin",
-    });
-  }
+    if (role == "ADMIN") {
+      next();
+    } else {
+      return res.render("success.ejs", {
+        message: "Bạn không có quyền truy cập trang Admin",
+        url: "/loginAdmin",
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -79,7 +108,7 @@ const verifyToken = (token) => {
   try {
     decoded = jwt.verify(token, key);
     data = decoded;
-    console.log("a",decoded)
+    //console.log("a", decoded);
   } catch (error) {
     console.log(error);
   }
@@ -88,5 +117,5 @@ const verifyToken = (token) => {
 module.exports = {
   checkAuth,
   checkRequireLogin,
-  checkPremission
+  checkPremission,
 };

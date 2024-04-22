@@ -25,87 +25,88 @@
                             <div class="container-fluid">
 
                                 <!-- Page Heading -->
-                                <h1 class="h3 mb-2 text-gray-800">Thông tin sản phẩm</h1>
+                                <h1 class="h3 mb-2 text-gray-800">Nhập thông tin sản phẩm</h1>
 
                                 <!-- DataTales Example -->
-                                <% if(typeof product !='undefined' ){ %>
 
 
-                                    <div class="card shadow mb-4"
-                                        style="display: flex; flex-direction: row; height: auto;">
-                                        <form action="/admin/product/edit" method="post" style="display: flex;"
-                                            enctype="multipart/form-data">
-                                            <div class="card" style="width: 30rem;">
-                                                <input type="hidden" value="<%= product.id %>" name="id">
-                                                <div
-                                                    style="text-align: center;width: 100%; height: 100%; margin-top:1rem ; text-align: center;">
-                                                    <img class="card-img-top" src="<%= product.image %>"
-                                                        alt="Card image cap" id="selectedImage"
-                                                        style="width: 75%; height: 75%;">
-                                                    <input type="hidden" name="img" value="<%= product.image %>">
-                                                    <p class="card-text" style="text-align: center;">
-                                                        Hình ảnh sản phẩm
-                                                    </p>
-                                                    <label for="image">Chọn tệp hình ảnh:</label>
-                                                    <input type="file" id="image" style="margin-left: 10px;"
-                                                        name="image">
-                                                </div>
 
+                                <div class="card shadow mb-4" style="display: flex; height: 30rem;">
+                                    <form id="productForm" style="display: flex;"
+                                        action="http://localhost:3008/camera/api/v1/products/<%= product.id %>"
+                                        method="post" enctype="multipart/form-data">
+
+                                        <div class="card" style="width: 30rem;">
+
+                                            <div
+                                                style="text-align: center;width: 100%; height: 100%; margin-top:1rem ; text-align: center;">
+                                                <img id="imgprd" class="card-img-top" src="<%= product.image %>"
+                                                    alt="Card image cap" id="selectedImage"
+                                                    style="width: 75%; height: 75%;">
+                                                <p class="card-text" style="text-align: center;">
+                                                    Hình ảnh sản phẩm
+                                                </p>
+                                                <label for="image">Chọn tệp hình ảnh:</label>
+                                                <input type="file" id="image" style="margin-left: 10px;" name="image">
                                             </div>
-                                            <div class="card" style="width: 50rem;">
-                                                <div class="form-floating mb-3" style="margin: 20px;">
-                                                    <label for="productname">Tên sản phẩm</label>
-                                                    <input type="text" id="productname" class="form-control"
-                                                        placeholder="Nhập tên sản phẩm" value="<%= product.name %>"
-                                                        name="name">
-                                                    <label for="price">Giá sản phẩm</label>
-                                                    <input type="text" id="price" class="form-control"
-                                                        placeholder="Nhập giá sản phẩm" value="<%= product.price %>"
-                                                        name="price">
-                                                    <label for="price">Mô tả sản phẩm</label>
-                                                    <textarea type="text" id="description" class="form-control"
-                                                        placeholder="Nhập mô tả sản phẩm"
-                                                        name="description"><%= product.description %></textarea>
-                                                    <label for="quantity">Số lượng sản phẩm</label>
-                                                    <input type="text" id="quantity" class="form-control"
-                                                        placeholder="Nhập số lượng sản phẩm"
-                                                        value="<%= product.quantity %>" name="quantity">
-                                                    <label for="date_of_manufacture">NSX</label>
-                                                    <input type="date" id="date_of_manufacture" class="form-control" placeholder="Nhập ngày sản xuất" value="<%= product.date_of_manufacture %>"
-                                                        name="date_of_manufacture">
-                                                    <label for="expiration_date">HSD</label>
-                                                    <input type="date" id="expiration_date" class="form-control" placeholder="Nhập ngày hết hạn" value="<%= product.expiration_date %>"
-                                                        name="expiration_date">
-                                                    <label for="Category">Danh mục sản phẩm</label>
-                                                    <select class="form-control" id="category" name="category_id">
-                                                        <% if(typeof categories !='undefined' ){
-                                                            categories.forEach(function(item, index, array) {
-                                                            if(item.id==product.category_id){ %>
-                                                            <option value="<%= item.id %>" selected>
-                                                                <%= item.name %>
+
+                                        </div>
+
+                                        <div class="card" style="width: 50rem;">
+
+                                            <div class="form-floating mb-3" style="margin: 20px;">
+                                                <label for="productName">Tên sản phẩm</label>
+                                                <input type="text" id="productName" class="form-control"
+                                                    placeholder="Nhập tên sản phẩm" value="<%= product.productName %>"
+                                                    name="productName">
+                                                <label for="price">Giá sản phẩm</label>
+                                                <input type="text" id="price" class="form-control"
+                                                    placeholder="Nhập giá sản phẩm" value="<%= product.price %>"
+                                                    name="price">
+                                                <label for="price">Mô tả sản phẩm</label>
+                                                <textarea type="text" id="contentprd" class="form-control"
+                                                    placeholder="Nhập mô tả sản phẩm"
+                                                    name="content"><%= product.content %></textarea>
+                                                <label for="count">Số lượng sản phẩm</label>
+                                                <input type="text" id="count" class="form-control"
+                                                    placeholder="Nhập số lượng sản phẩm" value="<%= product.count %>"
+                                                    name="count">
+                                                <label for="Category">Danh mục sản phẩm</label>
+                                                <select class="form-control" id="categoryId" name="categoryId">
+                                                    <% if(typeof categories !='undefined' ){ %>
+                                                        <option>
+                                                            chọn danh mục sản phẩm
+                                                        </option>
+                                                        <% categories.forEach(function(item, index, array) {
+                                                            if(item.id==product.categoryId){ %>
+                                                            <option value="<%= item.id%>" selected>
+                                                                <%= item.categoryName %>
                                                             </option>
-                                                            <% }else{%>
-                                                                <option value="<%= item.id %>">
-                                                                    <%= item.name %>
+                                                            <% } else{%>
+                                                                <option value="<%= item.id%>">
+                                                                    <%= item.categoryName %>
                                                                 </option>
-                                                                <% } }); } %>
-                                                    </select>
-                                                    <div
-                                                        style="margin-top: 2rem; text-align: center; display: flex; justify-content: space-around;">
-                                                        <a href="/admin/product" class="btn btn-danger">Trở lại</a>
-                                                        <button type="submit" class="btn btn-primary">Xác nhận</button>
-                                                    </div>
+                                                                <%} }) %>
+                                                                    <% } %>
+                                                </select>
 
-
+                                                <div
+                                                    style="margin-top: 2rem; text-align: center; display: flex; justify-content: space-around;">
+                                                    <a href="/admin/product" class="btn btn-danger">Trở
+                                                        lại</a>
+                                                    <input type="submit" class="btn btn-primary"
+                                                        value="Xác nhận"></input>
                                                 </div>
+
+
                                             </div>
+                                        </div>
 
 
 
-                                        </form>
-                                    </div>
+                                    </form>
+                                </div>
 
-                                    <% } %>
 
                             </div>
                             <!-- /.container-fluid -->
@@ -175,6 +176,61 @@
                         selectedImage.style.display = 'none';
                     }
                 });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    // Gán hành động gửi biểu mẫu khi được nộp
+                    $('#productForm').submit(function (event) {
+                        // Ngăn chặn hành động mặc định của biểu mẫu
+                        event.preventDefault();
+
+                        // Tạo một FormData object để lưu trữ dữ liệu từ biểu mẫu
+                        var formData = new FormData(this);
+
+                        // Gửi yêu cầu Ajax
+                        if (!validateForm()) {
+
+                            alert('Vui lòng nhập đầy đủ thông tin sản phẩm.');
+                            return;
+                        }
+
+                        $.ajax({
+                            url: $(this).attr('action'), // URL endpoint
+                            type: 'PUT', // Phương thức HTTP
+                            data: formData, // Dữ liệu để gửi đi
+                            processData: false, // Không xử lý dữ liệu
+                            contentType: false, // Không đặt kiểu dữ liệu
+                            success: function (response) {
+                                // Xử lý phản hồi từ máy chủ
+                                console.log(response);
+                                alert('Sửa thành công ');
+                                window.location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                // Xử lý lỗi nếu có
+                                //alert('Vui lòng nhập đầy đủ thông tin sản phẩm.');
+
+                                console.error('Lỗi:', xhr.responseText);
+                                console.error('Lỗi:', error);
+                            }
+                        });
+                    });
+                });
+                function validateForm() {
+                    // Kiểm tra từng trường một
+                    var categoryId = $('#categoryId').val();
+                    var productName = $('#productName').val();
+                    var content = $('#contentprd').val();
+                    var count = $('#count').val();
+                    var price = $('#price').val();
+                    //var img = $('#image').val();
+
+                    // Kiểm tra xem có trường nào trống không
+                    if (categoryId === '' || productName === '' || content === '' || count === '' || price === '') {
+                        return false;
+                    }
+                    return true;
+                }
             </script>
     </body>
 

@@ -41,7 +41,6 @@ router.get(
 router.post(
   "/admin/product/edit",
   middleware.checkPremission,
-  upload.single("image"),
   apiProduct.updateProduct
 );
 router.get(
@@ -64,12 +63,12 @@ router.get(
   middleware.checkPremission,
   apiProduct.getCreateProduct
 );
-router.post(
-  "/admin/product/create",
-  upload.single("image"),
-  middleware.checkPremission,
-  apiProduct.createProduct
-);
+// router.post(
+//   "/admin/product/create",
+//   upload.single("image"),
+//   middleware.checkPremission,
+//   apiProduct.createProduct
+// );
 
 //user
 router.get("/admin/user", middleware.checkPremission, apiUser.getUserHome);

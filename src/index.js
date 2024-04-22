@@ -1,4 +1,7 @@
 require("dotenv").config();
+const passport = require("passport");
+const FacebookStrategy = require("passport-facebook").Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -79,22 +82,90 @@ app.use((req, res, next) => {
     res.locals.categories = "";
   }
 
-  res.locals.categories = req.cookies.categories;
+  if (!req.cookies.cartTotal) {
+    res.locals.cartTotal = "";
+  }
 
-  res.locals.UserId = req.cookies.UserId;
+  res.locals.categories = req.cookies.categories;
+  res.locals.cartTotal = req.cookies.cartTotal;
+
+  res.locals.token = req.cookies.token;
+  res.locals.userId = req.cookies.userId;
   res.locals.name = req.cookies.name;
-  res.locals.username = req.cookies.username;
+  res.locals.userName = req.cookies.userName;
   res.locals.email = req.cookies.email;
   res.locals.address = req.cookies.address;
 
   //admin
   res.locals.adminUserId = req.cookies.adminUserId;
   res.locals.adminname = req.cookies.adminname;
-  res.locals.adminusername = req.cookies.adminusername;
+  res.locals.adminUserName = req.cookies.adminUserName;
   res.locals.adminemail = req.cookies.adminemail;
   res.locals.adminaddress = req.cookies.adminaddress;
   next();
 });
+
+// Passport session setup.
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+
+// Use the FacebookStrategy within Passport.
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      callbackURL: process.env.CALL_BACK_FB,
+    },
+    function (accessToken, refreshToken, profile, done) {
+      process.nextTick(function () {
+        const { name, emails, id } = profile;
+        const user = {
+          //email: emails[0].value,
+          firstName: name.givenName,
+          lastName: name.familyName,
+          id: id,
+        };
+        const payload = {
+          user,
+          accessToken,
+        };
+        return done(null, payload);
+      });
+    }
+  )
+);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+      callbackURL: process.env.CALL_BACK_GG,
+    },
+    function (accessToken, refreshToken, profile, done) {
+      process.nextTick(function () {
+        const { name, emails, id } = profile;
+        const user = {
+          email: emails,
+          firstName: name.givenName,
+          lastName: name.familyName,
+          id: id,
+        };
+        const payload = {
+          user,
+          accessToken,
+        };
+        return done(null, payload);
+      });
+    }
+  )
+);
 
 // app.use("/", webRoute);
 // app.use("/api/v1/", apiRoute);

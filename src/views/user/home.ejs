@@ -173,14 +173,14 @@
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="product__item">
                                         <div class="product__item__pic" style="height: 275px;">
-                                            <img src="<%= product.product.image %>" height=275px alt="" />
-                                            <div class="label new">SALE <%= product.discount %> % </div>
+                                            <img src="<%= product.image %>" height=275px alt="" />
+                                            <div class="label new">SALE <%= product.sale %> % </div>
                                             <ul class="product__hover">
                                                 <li><a href="" class="image-popup"><span
                                                             class="arrow_expand"></span></a>
                                                 </li>
                                                 <li><a href=""><span class="icon_heart_alt"></span></a></li>
-                                                <li><a href="/addCart/<%= product.product.id %>"><button
+                                                <li><a href="/addCart/<%= product.id %>"><button
                                                             class="add_to_cart"><span
                                                                 class="icon_bag_alt"></span></button></a></li>
                                             </ul>
@@ -194,16 +194,16 @@
                                                     white-space: normal;
                                                     -webkit-line-clamp: 2;
                                                     line-height: 1.6rem;
-                                                    margin-top: 10px;" href="/detail/<%= product.product.id %>">
-                                                    <%= product.product.name %>
+                                                    margin-top: 10px;" href="/detail/<%= product.id %>">
+                                                    <%= product.productName %>
                                                 </a>
                                             </h6>
                                             <div class="product__price">
                                                 <del style="color: gray; font-size: 14px; font-weight: normal;">
-                                                    <%= product.product.price.toLocaleString('vi-VN')+'đ' %>
+                                                    <%= product.price+ 'USD' %>
                                                 </del>
-                                                <%= Math.round(product.product.price - product.product.price *
-                                                    product.discount / 100).toLocaleString('vi-VN')+'đ' %>
+                                                <%= (product.price - product.price * product.sale / 100).toFixed(2)
+                                                    + 'USD' %>
 
                                             </div>
 
@@ -219,9 +219,7 @@
                     <div class="container" style="font-size: 25px;margin-bottom: 40px;">SẢN PHẨM MỚI</div>
                     <div class="container">
                         <div class="row" id="show_product">
-                            <%
-                            //console.log(products);
-                             products.forEach(function(product){ %>
+                            <% products.forEach(function(product){ %>
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="product__item">
                                         <div class="product__item__pic" style="height: 275px;">
@@ -251,7 +249,7 @@
                                                 </a>
                                             </h6>
                                             <div class="product__price">
-                                                    <%= product.price %> đ
+                                                <%= product.price %> USD
                                             </div>
                                         </div>
                                     </div>

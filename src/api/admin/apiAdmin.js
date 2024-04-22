@@ -33,32 +33,32 @@ const verifyToken = (token) => {
 };
 const getHome = async (req, res) => {
   try {
-    let Statistics = await axios.get(process.env.BASE_URL + `getStatistics`);
-    // let statisticsByMonht = await axios.get(process.env.BASE_URL + `getStatisticsByMonth`);
-    // let statisticsByYear = await axios.get(process.env.BASE_URL + `getStatisticsByYear`);
-    // let order_productDesc = await axios.get(process.env.BASE_URL + `getTopProductSale`);
-    // let categoriesSale = await axios.get(process.env.BASE_URL + `getProductCategory`);
-    // let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
-    let product = await axios.get(process.env.BASE_URL + `getProductAdmin`);
-    let expired = await axios.get(process.env.BASE_URL + `expired`);
+    // let Statistics = await axios.get(process.env.BASE_URL + `getStatistics`);
+    // // let statisticsByMonht = await axios.get(process.env.BASE_URL + `getStatisticsByMonth`);
+    // // let statisticsByYear = await axios.get(process.env.BASE_URL + `getStatisticsByYear`);
+    // // let order_productDesc = await axios.get(process.env.BASE_URL + `getTopProductSale`);
+    // // let categoriesSale = await axios.get(process.env.BASE_URL + `getProductCategory`);
+    // // let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
+    // let product = await axios.get(process.env.BASE_URL + `getProductAdmin`);
+    // let expired = await axios.get(process.env.BASE_URL + `expired`);
     //let countAllRate = await axios.get(process.env.BASE_URL + `countRate`);
     //console.log("rate:", expired.data.product);
-    const Monht = formatVND(
-      Statistics.data.StatisticsByMonth.StatisticsByMonth
-    );
-    const Year = formatVND(Statistics.data.StatisticsByYear.total_revenue);
+    // const Monht = formatVND(
+    //   Statistics.data.StatisticsByMonth.StatisticsByMonth
+    // );
+    // const Year = formatVND(Statistics.data.StatisticsByYear.total_revenue);
     //console.log(categoriesSale.data.product)
     //console.log(productAllRate.data)
     return res.render("admin/indexAdmin.ejs", {
-      Statistics: Statistics.data.Statistics,
-      statisticsByMonht: Monht,
-      statisticsByYear: Year,
-      order_productDesc: product.data.getTopProductSale,
-      categoriesSale: product.data.getProductCategory,
-      countAllRate: Statistics.data.countrate,
-      productAllRate: product.data.getProductRate,
-      expired: expired.data.product,
-      saleprd: expired.data.sale,
+      // Statistics: Statistics.data.Statistics,
+      // statisticsByMonht: Monht,
+      // statisticsByYear: Year,
+      // order_productDesc: product.data.getTopProductSale,
+      // categoriesSale: product.data.getProductCategory,
+      // countAllRate: Statistics.data.countrate,
+      // productAllRate: product.data.getProductRate,
+      // expired: expired.data.product,
+      // saleprd: expired.data.sale,
     });
   } catch (error) {
     console.log(error);

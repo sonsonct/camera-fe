@@ -29,9 +29,8 @@
                                     <label
                                         style="font-size: 18px;font-family: 'Montserrat', sans-serif;margin-bottom: 20px;">Tên
                                         đăng nhập:</label>
-                                    <input style="height: 40px;width: 80%;font-size: 14px" type="text"
-                                        class="form-control" name="username" placeholder="Nhập tên đăng nhập..."
-                                        value="" required>
+                                    <input style="height: 40px;width: 80%;font-size: 14px" type="email"
+                                        class="form-control" name="email" placeholder="Nhập email..." value="" required>
                                 </div>
                                 <div class="form-group">
                                     <label
@@ -56,14 +55,24 @@
                                 </div>
                             </form>
                             <div style="width: 80%;height: 150px;background-color: #f5f6f9;">
-                                <div
-                                    style="text-align: center;font-weight: bold;padding-top: 20px;margin-bottom: 10px;">
+                                <button
+                                    style="background-color: blue; height: 50px;width: 95%;margin: 10px;border: 2px solid;border-radius: 5px;font-weight: bold;"><a
+                                        href="/auth/facebook" style="color: white;">Đăng nhập FaceBook <i
+                                            class="fa-brands fa-facebook"></i></a></button>
+                                <button
+                                    style="height: 50px;width: 95%;margin: auto;border: 2px solid;border-radius: 5px;font-weight: bold;"><a
+                                        href="/auth/google">Đăng nhập Google <i
+                                            class="fa-brands fa-google"></i></a></button>
+                            </div>
+                            <div style="width: 80%;height: 150px;background-color: #f5f6f9;">
+                                <div style="text-align: center;font-weight: bold;margin-bottom: 10px;">
                                     TẠO TÀI
                                     KHOẢN NGAY</div>
                                 <button
                                     style="height: 50px;width: 95%;margin: auto;border: 2px solid;border-radius: 5px;font-weight: bold;"><a
                                         href="/register">Đăng Ký</a></button>
                             </div>
+
                 </div>
                 <div class="col-sm-6"><img
                         src="https://templates.g5plus.net/glowing-bootstrap-5/assets/images/hero-slider/hero-slider-white-14.jpg"

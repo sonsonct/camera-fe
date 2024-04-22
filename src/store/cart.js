@@ -1,67 +1,64 @@
 const apiProduct = require("../api/user/apiProduct");
+const axios = require("axios");
+
+const vietCart = async (req, res) => {
+  let erro = req.flash("erro");
+  const carts = await axios.get(
+    process.env.BASE_URL + `cart/${req.cookies.userId}`
+  );
+  //console.log(carts.data.data[0].orders);
+  let sumPrice = 0;
+  let cartData = [];
+  if (carts.data.data[0].orders) {
+    cartData = carts.data.data[0].orders;
+    carts.data.data[0].orders.forEach((element) => {
+      sumPrice =
+        sumPrice +
+        (element.total * element.product.price -
+          (element.total * element.product.price * element.product.sale) / 100);
+    });
+  }
+  console.log(cartData);
+
+  return res.render("user/cart.ejs", {
+    carts: cartData,
+    sumPrice: sumPrice,
+    erro,
+  });
+};
 
 const handleAddCart = async (req, res) => {
-  let data = await apiProduct.getProductDetailCart(req.params.id);
-  //console.log("datta",data.data);
-  let name = data.data.product.name;
-  let price = data.data.product.price
-  if (data.data.product.sales!== null){
-    price = data.data.product.price - data.data.product.price * data.data.product.sales.discount / 100;
-  }
-  
-  let id = req.params.id;
-  let image = data.data.product.image;
-  let count = 0;
-  for (let i = 0; i < req.session.cart.length; i++) {
-    if (req.session.cart[i].id == id) {
-      req.session.cart[i].quantity += 1;
-      count++;
-    }
-  }
-  if (count === 0) {
-    cart_data = {
-      id: id,
-      name: name,
-      price: price,
-      image: image,
-      quantity: 1,
-    };
-    req.session.cart.push(cart_data);
-  }
-  console.log(req.session.cart);
+  await axios.post(process.env.BASE_URL + `cart`, {
+    userId: req.cookies.userId,
+    productId: [req.params.id],
+  });
+
   return res.redirect("/");
 };
 
-const deleteCart = (req, res) => {
-  let productId = req.params.id;
-  for (let i = 0; i < req.session.cart.length; i++) {
-    if (req.session.cart[i].id === productId) {
-      req.session.cart.splice(i, 1);
-    }
-  }
+const deleteCart = async (req, res) => {
+  let orderId = req.params.id;
+  await axios.delete(process.env.BASE_URL + `cart/${orderId}`);
   return res.redirect("/viewCart");
 };
 
-const upCart = (req, res) => {
-  let productId = req.params.id;
-  for (let i = 0; i < req.session.cart.length; i++) {
-    if (req.session.cart[i].id === productId) {
-      req.session.cart[i].quantity++;
-    }
-  }
+const upCart = async (req, res) => {
+  let orderId = req.params.id;
+  const order = await axios.get(process.env.BASE_URL + `cart/order/${orderId}`);
+  //console.log(order.data.data);
+  await axios.put(process.env.BASE_URL + `cart/order/${orderId}`, {
+    total: 1,
+  });
   return res.redirect("/viewCart");
 };
 
-const deCart = (req, res) => {
-  let productId = req.params.id;
-  for (let i = 0; i < req.session.cart.length; i++) {
-    if (req.session.cart[i].id === productId) {
-      req.session.cart[i].quantity--;
-      if (req.session.cart[i].quantity === 0) {
-        req.session.cart.splice(i, 1);
-      }
-    }
-  }
+const deCart = async (req, res) => {
+  let orderId = req.params.id;
+  const order = await axios.get(process.env.BASE_URL + `cart/order/${orderId}`);
+  //console.log(order.data.data);
+  await axios.put(process.env.BASE_URL + `cart/order/${orderId}`, {
+    total: -1,
+  });
   return res.redirect("/viewCart");
 };
 
@@ -70,4 +67,5 @@ module.exports = {
   deleteCart,
   upCart,
   deCart,
+  vietCart,
 };

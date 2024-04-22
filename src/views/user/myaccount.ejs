@@ -27,18 +27,27 @@
                 <div style="background-color: white;" class="col-sm-3">
                     <div class="container">
                         <div class="row" style="margin-top: 20px;">
-                            <div class="col-sm-2">
-                                <i style="font-size: 50px;" class="fa-solid fa-user"></i>
+                            <div class="col-sm-5">
+                                <% if(user.avatar!=null) { %>
+
+                                    <img src="<%= user.avatar %>" style="width: 100%; height: auto;border-radius: 50%;"
+                                        alt="Hình ảnh">
+
+                                    <% } else {%>
+                                        <i style="font-size: 50px;" class="fa-solid fa-user"></i>
+                                        <% } %>
+
                             </div>
+
+                            <input type="file" id="fileInput" name="avatar" accept=".png, .jpg" style="display:none;">
+
                             <div class="col-sm-10">
 
                                 <div class="container">
-                                    <p>
-                                        <%= user.name %>
-                                    </p>
-                                    <p>
-                                        <%= user.email %>
-                                    </p>
+                                    <label for="fileInput" class="custom-file-upload">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </label>
+
                                 </div>
 
                             </div>
@@ -69,22 +78,14 @@
                         </p>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>Tên đăng nhập:</p>
+                                <p>Tên:</p>
                             </div>
-                            <div class="col-sm-10">
+                            <div class="col-sm-10" style="display: flex;">
                                 <p>
                                     <%= user.username %>
                                 </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <p>Họ và tên:</p>
-                            </div>
-                            <div class="col-sm-10">
-                                <p>
-                                    <%= user.name %>
-                                </p>
+                                <i data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-pen"
+                                    style="margin-left: 10px;"></i>
                             </div>
                         </div>
                         <div class="row">
@@ -99,19 +100,186 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-2">
-                                <p>Địa chỉ:</p>
+                                <p>Password:</p>
                             </div>
-                            <div class="col-sm-10">
+                            <div class="col-sm-10" style="display: flex;">
                                 <p>
-                                    <%= user.address %>
+                                    *************
                                 </p>
+                                <i data-toggle="modal" data-target="#exampleModalCenter2" class="fa-solid fa-pen"
+                                    style="margin-left: 10px;"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="password" class="form-check-label" name="oldPassword" id="oldPassword"
+                            placeholder="nhập mật khẩu cũ" />
+                        <hr>
+                        <input type="password" class="form-check-label" name="newPassword" id="newPassword"
+                            placeholder="nhập mật khẩu mới" />
+                        <hr>
+                        <input type="password" class="form-check-label" name="retypeNewPassword"
+                            placeholder="nhập lại mật khẩu mới" id="retypeNewPassword" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="changePassword" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Đổi tên</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-check-label" name="newName" id="newName"
+                            placeholder="nhập tên mới">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="changeName" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#changePassword').on('click', function () {
+                    var oldPassword = document.getElementById('oldPassword').value
+                    if (oldPassword == "") {
+                        alert('Vui lòng nhập mật khẩu cũ');
+                    }
+                    var newPassword = document.getElementById('newPassword').value
+                    if (newPassword == "") {
+                        alert('Vui lòng nhập mật khẩu mới');
+                    }
+
+                    var retypeNewPassword = document.getElementById('retypeNewPassword').value
+                    if (retypeNewPassword == "") {
+                        alert('Vui lòng nhập lại mật khẩu mới');
+                    }
+
+                    if (retypeNewPassword !== newPassword) {
+                        alert('Vui lòng nhập lại mật khẩu mới và mật khẩu nhập lại không giống nhau');
+                    }
+
+                    var userData = {
+                        "oldPassword": oldPassword,
+                        "newPassword": newPassword,
+                        "reTypeNewPassword": retypeNewPassword
+                    };
+                    $.ajax({
+                        url: 'http://localhost:3008/camera/api/v1/account/update-password',
+                        type: 'PUT',
+                        data: JSON.stringify(userData),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', `Bearer <%= token %>`);
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            alert('Sửa thành công ');
+                            window.location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Mật khẩu cũ không chính xác ');
+                        }
+                    });
+
+                })
+                $('#changeName').on('click', function () {
+                    var newName = document.getElementById('newName').value
+                    if (newName == "") {
+                        alert('Vui lòng nhập tên mới');
+                    }
+                    var userData = {
+                        "username": newName
+                    };
+                    $.ajax({
+                        url: 'http://localhost:3008/camera/api/v1/account/update-username',
+                        type: 'PUT',
+                        data: JSON.stringify(userData),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', `Bearer <%= token %>`);
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            alert('Sửa thành công ');
+                            window.location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Đã xảy ra lỗi! ' + error);
+                        }
+                    });
+
+                })
+                $('#fileInput').on('change', function () {
+                    var file = this.files[0];
+                    console.log(this.files);
+                    if (file) {
+                        var fileType = file.type;
+                        if (fileType.indexOf('image') !== -1) {
+                            var formData = new FormData();
+                            formData.append('avatar', file);
+
+                            $.ajax({
+                                url: 'http://localhost:3008/camera/api/v1/account/update-avatar',
+                                type: 'PUT',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('Authorization', `Bearer <%= token %>`);
+                                },
+                                success: function (response) {
+                                    console.log(response);
+                                    alert('Sửa thành công ');
+                                    window.location.reload();
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Đã xảy ra lỗi! ' + error);
+                                }
+                            });
+                        } else {
+                            alert('Vui lòng chọn một tệp hình ảnh.');
+                        }
+                    }
+                });
+            })
+
+        </script>
         <%- include('./block/footer.ejs') %>
+
 </body>
 <%- include('./block/script.ejs') %>
 

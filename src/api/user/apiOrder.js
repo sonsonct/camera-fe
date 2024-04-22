@@ -1,22 +1,150 @@
 const axios = require("axios");
 require("dotenv").config();
+const paypal = require("paypal-rest-sdk");
+paypal.configure({
+  mode: "sandbox", // sandbox hoặc live
+  client_id:
+    "AeQvA6fwEKOk-LQnBTE7bizy3f61pTUmW2toGMLXes6R2tjtgve-KNry9wtQ1qwHhJtVstUIGXMY-I65",
+  client_secret:
+    "ECodx2IsIHMPz66SNFamm-PST85rozqFaG178bqE01ILfkrT0w0M0j09FC7vO313eNg0JKI6iH131287",
+});
+const createPayment = (req, res, data) => {
+  //console.log(data);
+  let sumPrice = 0;
+  data.forEach((order) => {
+    sumPrice +=
+      order.total * order.product.price -
+      (order.total * order.product.price * order.product.sale) / 100;
+  });
+
+  const paymentData = {
+    intent: "sale",
+    payer: {
+      payment_method: "paypal",
+    },
+    redirect_urls: {
+      return_url: "http://localhost:8082/success",
+      cancel_url: "http://localhost:8082/cancel",
+    },
+    transactions: [
+      {
+        item_list: {
+          items: data.map((items) => {
+            return {
+              name: items.product.productName,
+              price: (
+                items.product.price -
+                (items.product.price * items.product.sale) / 100
+              ).toFixed(2),
+              currency: "USD",
+              quantity: items.total,
+            };
+          }),
+        },
+        amount: {
+          currency: "USD",
+          total: sumPrice.toFixed(2),
+        },
+        description: "Description of the payment",
+      },
+    ],
+  };
+
+  paypal.payment.create(paymentData, function (error, payment) {
+    if (error) {
+      console.error(error);
+    } else {
+      // Redirect người dùng đến URL thanh toán PayPal
+      for (let i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === "approval_url") {
+          res.redirect(payment.links[i].href);
+        }
+      }
+    }
+  });
+};
+
+const cancelPayment = async (req, res) => {
+  const ship = await axios.get(
+    process.env.BASE_URL + `cart/ship/${req.cookies.userId}`
+  );
+  res.render("user/paymentComplate.ejs", {
+    status: false,
+    order: ship.data.data[0],
+  });
+};
+// Xử lý callback từ PayPal sau khi thanh toán hoàn tất
+
+const executePayment = async (req, res) => {
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+
+  const executePaymentData = {
+    payer_id: payerId,
+  };
+  const ship = await axios.get(
+    process.env.BASE_URL + `cart/ship/${req.cookies.userId}`
+  );
+
+  await axios.put(process.env.BASE_URL + `cart/ship/${ship.data.data[0].id}`);
+
+  paypal.payment.execute(
+    paymentId,
+    executePaymentData,
+    function (error, payment) {
+      if (error) {
+        console.error(error);
+      } else {
+        res.render("user/paymentComplate.ejs", {
+          status: true,
+          order: ship.data.data[0],
+        });
+      }
+    }
+  );
+};
 const order = async (req, res) => {
   try {
-    if (!req.body.method) {
-      req.body.method = "";
+    let erro = req.flash("erro");
+    console.log(req.body);
+    if (req.body.name == "") {
+      erro = "Vui lòng nhập tên người nhận";
     }
-    let dataOrder = {
-      user: req.body,
-      cart: req.session.cart,
-    };
-    console.log("Data:", dataOrder);
-    let data = await axios.post(process.env.BASE_URL + `order`, dataOrder);
-    if (data.data.success == true) {
-      req.session.cart = null;
-      req.flash("success", `${data.data.message}`);
+    if (req.body.phone == "") {
+      erro = "Vui lòng nhập số điện thoại người nhận";
     }
-    console.log(data.data);
-    return res.redirect("/viewCart");
+    if (req.body.address == "") {
+      erro = "Vui lòng nhập địa chỉ người nhận";
+    }
+
+    const carts = await axios.get(
+      process.env.BASE_URL + `cart/${req.cookies.userId}`
+    );
+    const data = carts.data.data[0].orders;
+    let sumPrice = 0;
+    carts.data.data[0].orders.forEach((element) => {
+      sumPrice =
+        sumPrice +
+        (element.total * element.product.price -
+          (element.total * element.product.price * element.product.sale) / 100);
+    });
+
+    if (erro.length > 0) {
+      return res.render("user/cart.ejs", {
+        carts: data,
+        sumPrice: sumPrice,
+        erro,
+      });
+    }
+
+    await axios.post(process.env.BASE_URL + `cart/ship`, {
+      phoneNumber: req.body.phone,
+      nameUser: req.body.name,
+      address: req.body.address,
+      cartId: carts.data.data[0].id,
+    });
+
+    return createPayment(req, res, data);
   } catch (error) {
     console.log("Loi:", error.response.data.detail);
     if (error.response.data.detail) {
@@ -117,4 +245,7 @@ module.exports = {
   getOrderComplete,
   getOrderRate,
   updateStatusOrder,
+  executePayment,
+  createPayment,
+  cancelPayment,
 };

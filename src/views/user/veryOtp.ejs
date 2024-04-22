@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinLeLe-Login</title>
+    <%- include('./block/style.ejs') %>
+</head>
+
+<body>
+    <%- include('./block/header.ejs') %>
+        <div class="container" style="margin-top: 50px;margin-bottom: 100px; width: 50%;">
+            <form action="/register/vertify" method="post">
+                <div class="position-relative">
+                    <div class="card p-2 text-center" style="height: auto;">
+                        <h6>Vui lòng nhập mã otp của bạn</h6>
+                        <div> <span>Mã đã được gửi tới email</span> <small>
+                                <%= email %>
+                            </small> </div>
+
+                        <input type="hidden" name="otpSignature" value="<%= otpSignature %>" />
+                        <input type="hidden" name="email" value="<%= email %>" />
+                        <input type="hidden" name="newPassword" value="<%= newPassword %>" />
+                        <input type="hidden" name="reTypeNewPassword" value="<%= newPassword %>" />
+                        <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                            <input class="m-2 tex>t-center form-control rounded" type="text" name="otpCode" id="first"
+                                maxlength="6" style="width: 30%; text-align: center;" />
+
+
+
+                        </div>
+                        <% if(success.length>0) { %>
+                            <div>
+                                <p
+                                    style="padding-top: 12px;background-color: #dff0d8;color:#3c763d;margin-bottom: 20px;height: 50px;border-radius: 10px;padding-left: 10px;font-size: 16px;">
+                                    <%= success %>
+                                </p>
+                            </div>
+                            <% } %>
+                                <% if(erro.length>0) { %>
+                                    <div style="text-align: center;">
+                                        <p
+                                            style="display: inline-block; width: 50%; padding-top: 12px; background-color: #f2dede; color: #b55947; margin-bottom: 20px; height: auto; border-radius: 10px; padding-left: 10px; font-size: 16px;">
+                                            <%= erro %>
+                                        </p>
+                                    </div>
+                                    <% } %>
+                                        <div class="mt-4"> <button
+                                                class="btn btn-danger px-4 validate">Validate</button>
+                                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!-- <form method="POST" action="/register" id="innerForm">
+                <input type="hidden" name="email" value="<%= email %>" />
+                <input type="hidden" name="newPassword" value="<%= newPassword %>" />
+                <input type="hidden" name="reTypeNewPassword" value="<%= newPassword %>" />
+            </form> -->
+
+        </div>
+        <script>
+
+            document.getElementById("submitInnerForm").addEventListener("click", function () {
+                // Submit form bên trong
+                document.getElementById("innerForm").submit();
+            });
+        </script>
+        <%- include('./block/footer.ejs') %>
+            <%- include('./block/script.ejs') %>
+</body>
+
+</html>

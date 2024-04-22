@@ -4,8 +4,29 @@ const getProductHome1 = async (req, res) => {
   try {
     let dataProducts = await axios.get(
       process.env.BASE_URL +
-        `products?page=1&pageSize=6&sortField=createdAt&sortType=-1`
+        `products?page=1&pageSize=8&sortField=createdAt&sortType=-1`
     );
+
+    if (req.cookies.userId) {
+      let cartTotal = 0;
+      let datacrat = await axios.get(
+        process.env.BASE_URL + `cart/${req.cookies.userId}`
+      );
+      //console.log(datacrat.data.data[0].orders.length);
+      if (datacrat.data.data.length > 0) {
+        cartTotal = datacrat.data.data[0].orders.length;
+      }
+      res.cookie("cartTotal", cartTotal, {
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+    }
+
+    let dataProductsSale = await axios.get(
+      process.env.BASE_URL +
+        `products?sale=1&page=1&pageSize=8&sortField=createdAt&sortType=-1`
+    );
+
+    //console.log(dataProducts.data.data.data);
 
     let categories = await axios.get(
       process.env.BASE_URL + `public/categories?page=1&pageSize=4`
@@ -18,15 +39,15 @@ const getProductHome1 = async (req, res) => {
     if (dataProducts.data.statusCode !== 200) {
       dataProducts.data.data = [];
     }
-    console.log("prd", dataProducts.data.statusCode);
+    //console.log("prd", dataProducts.data.statusCode);
     // let dataProductsSale = await axios.get(
     //   process.env.BASE_URL + `productsSale`
     // );
     //console.log(dataProductsSale.data.product)
     //let products = dataProducts.data.product;
     return res.render("user/home.ejs", {
-      products: dataProducts.data.data,
-      dataProductsSale: [],
+      products: dataProducts.data.data.data,
+      dataProductsSale: dataProductsSale.data.data.data,
     });
   } catch (error) {
     console.log(error);

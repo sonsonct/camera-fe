@@ -78,18 +78,18 @@
 
                                                             <tr>
                                                                 <td>
-                                                                    <%= prd.product.name %>
+                                                                    <%= prd.productName %>
                                                                 </td>
                                                                 <td style="text-align: center;">
-                                                                    <%= prd.product.price %>
+                                                                    <%= prd.price %>
                                                                 </td>
                                                                 <td style="text-align: center;">
-                                                                    <%= prd.product.quantity %>
+                                                                    <%= prd.count %>
                                                                 </td>
 
                                                                 <td style="text-align: center;">
 
-                                                                    <a href="/admin/product/edit/<%= prd.product.id %>">
+                                                                    <a href="/admin/product/edit/<%= prd.id %>">
                                                                         <button type="button"
                                                                             style="border: none; background-color: transparent; width: auto;"
                                                                             value="">
@@ -101,28 +101,35 @@
 
                                                                 </td>
                                                                 <td style="text-align: center;">
-                                                                    <form action=<%=(prd.sale==0) ? ("/admin/addSale") : ("/admin/updateSale") %> method="post">
-                                                                        <input type="hidden" name="product_id" value="<%= prd.product.id %>">
-                                                                        <select class="form-select" aria-label="Default select example" name="discount">
+                                                                    <form action=<%=(prd.sale==0) ? ("/admin/addSale") :
+                                                                        ("/admin/updateSale") %> method="post">
+                                                                        <input type="hidden" name="productId"
+                                                                            value="<%= prd.id %>">
+                                                                        <select class="form-select"
+                                                                            aria-label="Default select example"
+                                                                            name="discount">
                                                                             <option value="0">Lựa chọn sale</option>
-                                                                            <% const arr=[20, 30, 50, 90] 
+                                                                            <% const arr=[20, 30, 50, 90]
                                                                                 arr.forEach(item=> {
                                                                                 if(prd.sale==item){
                                                                                 %>
-                                                                                <option style="text-align: center;" selected value="<%= item %>">
+                                                                                <option style="text-align: center;"
+                                                                                    selected value="<%= item %>">
                                                                                     <%= item %> %
                                                                                 </option>
                                                                                 <% }else{ %>
-                                                                                    <option style="text-align: center;" value="<%= item %>">
+                                                                                    <option style="text-align: center;"
+                                                                                        value="<%= item %>">
                                                                                         <%= item %> %
                                                                                     </option>
                                                                                     <% } }) %>
                                                                         </select>
-                                                                        <button type="submit" style="margin-top: 1rem;" class="btn-primary">Xác nhận</button>
+                                                                        <button type="submit" style="margin-top: 1rem;"
+                                                                            class="btn-primary">Xác nhận</button>
                                                                     </form>
                                                                 </td>
                                                                 <td style="text-align: center;">
-                                                                    <a href="/admin/product/delete/<%= prd.product.id %>">
+                                                                    <a href="/admin/product/delete/<%= prd.id %>">
                                                                         <button type="button"
                                                                             style="border: none; background-color: transparent; width: auto;"
                                                                             id="btn2"
@@ -135,7 +142,7 @@
                                                                 </td>
                                                             </tr>
                                                             <% }); %>
-                                                <% }%>
+                                                                <% }%>
 
                                                 </tbody>
 
@@ -146,7 +153,7 @@
                                                 <p style="width: 100%; text-align: center;">
                                                     <%=message%>
                                                 </p>
-                                            <% } %>
+                                                <% } %>
                                         </div>
                                     </div>
 
@@ -224,32 +231,31 @@
         <%- include('./block/footer.ejs') %>
     </body>
     <script>
-        const pageSize = 6;
-            <% if (typeof countProducts !== "undefined") { %>
-                const totalItems = <%= countProducts %>;
+
+            <% if (typeof totalPage !== "undefined") { %>
+                const totalItems = <%= totalPage %>;
             <% } else { %>
                 const totalItems = 0;
             <% } %>
 
-            let currentPage = 1;
-        // Tạo nút phân trang
-        function createPaginationButtons() {
-            const totalPages = Math.ceil(totalItems / pageSize);
-            const paginationDiv = document.getElementById("pagination");
 
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement("a");
-                const nameSearch = document.getElementById("nameSearch");
-                button.href = nameSearch.value != "" ? (`/admin/product/${nameSearch.value}/page/${i}`) : (`/admin/product/page/${i}`);
+            function createPaginationButtons() {
 
-                button.textContent = i;
-                button.className = "page-link";
-                //button.addEventListener("click", function () {
-                //    currentPage = i;
-                //});
-                paginationDiv.appendChild(button);
+                const paginationDiv = document.getElementById("pagination");
+
+                for (let i = 1; i <= totalItems; i++) {
+                    const button = document.createElement("a");
+                    const nameSearch = document.getElementById("nameSearch");
+                    button.href = nameSearch.value != "" ? (`/admin/product/${nameSearch.value}/page/${i}`) : (`/admin/product/page/${i}`);
+
+                    button.textContent = i;
+                    button.className = "page-link";
+                    //button.addEventListener("click", function () {
+                    //    currentPage = i;
+                    //});
+                    paginationDiv.appendChild(button);
+                }
             }
-        }
 
 
         createPaginationButtons();

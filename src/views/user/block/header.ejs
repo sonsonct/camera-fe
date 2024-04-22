@@ -46,7 +46,7 @@
     }
 
     .dropdown-content {
-        background-color: rgb(73, 59, 59); 
+        background-color: rgb(73, 59, 59);
         display: none;
         position: absolute;
         min-width: 160px;
@@ -111,16 +111,13 @@
                   </button> -->
 
                 <button class="header-action-btn" aria-label="cart item">
-                    <data class="btn-text" value="0">
-                        <% total=total.toLocaleString('vi-VN') %>
-                            <%= total %>đ
-                    </data>
+
 
                     <a href="/viewCart">
                         <ion-icon name="bag-handle-outline" aria-hidden="true" aria-hidden="true"></ion-icon>
                     </a>
                     <span class="btn-badge">
-                        <%= cart.length %>
+                        <%= cartTotal %>
                     </span>
                 </button>
 
@@ -132,36 +129,38 @@
                     <li>
                         <a href="/" class="navbar-link has-after">Trang Chủ</a>
                     </li>
-                    <% if(categories){
-                        categories.forEach(function(category){ %>
-                            <li class="dropdown">
-                                <a class="navbar-link has-after"><%=category.categoryName%></a>
-                                <div class="dropdown-content">
-                                    <% category.subCategories.forEach(function(subCategory){ %>
-                                        <a href=""><%=subCategory.categoryName%></a>
-                                        <% })%>
-                                </div>
+                    <% if(categories){ categories.forEach(function(category){ %>
+                        <li class="dropdown">
+                            <a class="navbar-link has-after">
+                                <%=category.categoryName%>
+                            </a>
+                            <div class="dropdown-content">
+                                <% category.subCategories.forEach(function(subCategory){ %>
+                                    <a href="">
+                                        <%=subCategory.categoryName%>
+                                    </a>
+                                    <% })%>
+                            </div>
+                        </li>
+                        <% }) } %>
+
+                            <li>
+                                <a href="" class="navbar-link has-after">Liên Hệ</a>
                             </li>
-                            <%    })
-                    } %>
 
-                    <li>
-                        <a href="" class="navbar-link has-after">Liên Hệ</a>
-                    </li>
+                            <li class="dropdown">
+                                <a class="navbar-link has-after">Tài Khoản</a>
+                                <div class="dropdown-content">
+                                    <% if(!userId) { %>
+                                        <a href="/login">Đăng Nhập</a>
+                                        <a href="/register">Đăng Ký</a>
+                                        <% } else { %>
+                                            <a href="/user/<%= userId %>">Account</a>
+                                            <a href="/logout">Đăng Xuất</a>
+                                            <% } %>
+                                </div>
 
-                    <li class="dropdown">
-                        <a class="navbar-link has-after">Tài Khoản</a>
-                        <div class="dropdown-content">
-                            <% if(!UserId) { %>
-                                <a href="/login">Đăng Nhập</a>
-                                <a href="/register">Đăng Ký</a>
-                                <% } else { %>
-                                    <a href="/user/<%= UserId %>">Account</a>
-                                    <a href="/logout">Đăng Xuất</a>
-                                    <% } %>
-                        </div>
-
-                    </li>
+                            </li>
                 </ul>
             </nav>
 
