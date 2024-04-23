@@ -47,7 +47,6 @@
                                                         <th style="text-align: center;">Thông tin đơn hàng</th>
                                                         <th style="text-align: center; width: 20%;">Trạng thái đơn hàng
                                                         </th>
-                                                        <th style="text-align: center; width: 10%;">Xóa đơn hàng</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -56,39 +55,44 @@
 
                                                             <tr>
                                                                 <td>
-                                                                    <%= order.name %>
+                                                                    <%= order.ship[0].nameUser %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= order.phone %>
+                                                                    <%= order.ship[0].phoneNumber %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= order.address %>
+                                                                    <%= order.ship[0].address %>
                                                                 </td>
                                                                 <td>
-                                                                    <%= order.payment %>
+                                                                    <%= order.ship[0].status %>
                                                                 </td>
                                                                 <td>
 
-                                                                    <% order.order_product.forEach(product=>{ %>
+                                                                    
+                                                                    <%
+                                                                    let sumPrice = 0; 
+                                                                    order.orders.forEach(items=>{ %>
                                                                         <li>
-                                                                            <%= product.product.name %> (sl: <%=
-                                                                                    product.quantity %>)
+                                                                            <%= items.product.productName %> (sl: <%=
+                                                                            items.total %>)
+                                                                            
                                                                         </li>
-                                                                        <% }) %>
+                                                                        <%
+                                                                        sumPrice += items.product.price*items.total - items.product.price*items.total*items.product.sale/100;
+                                                                     }) %>
                                                                             <p
                                                                                 style="text-align: right; margin-top: 1rem;">
-                                                                                Tổng tiền: <%= order.total %> VNĐ </p>
-
+                                                                                Tổng tiền: <%= sumPrice %> USD </p>
                                                                 </td>
                                                                 <td style="text-align: center;">
 
-                                                                    <% if(order.status==2){ %>
+                                                                    <% if(order.status==3){ %>
                                                                         <p style="color: rgba(0, 255, 170, 0.724);">Đã
                                                                             giao hàng</p>
-                                                                        <% }else if(order.status==1){ %>
+                                                                        <% }else if(order.status==2){ %>
                                                                             <p style="color: yellowgreen;">Đang giao
                                                                                 hàng</p>
-                                                                            <% }else if(order.status==0){ %>
+                                                                            <% }else if(order.status==1){ %>
                                                                                 <p>Chưa xác nhận</p>
                                                                                 <a
                                                                                     href="/admin/order/confirm/<%= order.id %>"><button
@@ -103,18 +107,7 @@
                                                                 </td>
 
 
-                                                                <td style="text-align: center;">
-                                                                    <a href="/admin/order/delete/<%= order.id %>">
-                                                                        <button type="button"
-                                                                            style="border: none; background-color: transparent; width: auto;"
-                                                                            id="btn2"
-                                                                            onclick="return confirm('Bạn có muốn xóa đơn hàng này không')">
-                                                                            <i style="color:  #858796;"
-                                                                                class="fas fa-trash"></i>
-                                                                        </button>
-                                                                    </a>
-
-                                                                </td>
+                                                               
                                                             </tr>
                                                             <% }); %>
                                                                 <% }%>
@@ -124,7 +117,7 @@
                                             </table>
                                             <div style="display: flex; justify-content: center; width: 100%;">
                                                 <% if(typeof countdataOrder !=='undefined' ){ const
-                                                    totalPages=Math.ceil((countdataOrder) / 3);
+                                                    totalPages=Math.ceil((countdataOrder) / 6);
                                                     for(i=1;i<=totalPages;i++){ %>
                                                     <a href="/admin/order/page/<%=i%>" class="page-link">
                                                         <%= i %>

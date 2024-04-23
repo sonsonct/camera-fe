@@ -115,8 +115,8 @@ const handleLoginAdmin = async (req, res) => {
     //console.log("a", req.body);
 
     let data = await axios.post(process.env.BASE_URL + `admin/auth/login`, {
-      email: "sondzvodoi@gmail.com",
-      password: "string",
+      email: req.body.email,
+      password: req.body.password,
     });
 
     console.log(data.data.statusCode);
@@ -133,9 +133,9 @@ const handleLoginAdmin = async (req, res) => {
     console.log("a", cookie.jwtadmin);
     return res.redirect("/loginAdmin");
   } catch (error) {
-    console.log(error);
-    if (error) {
-      req.flash("erro", `${error}`);
+    console.log(error.response.data.message);
+    if (error.response.data.message) {
+      req.flash("erro", `${error.response.data.message}`);
     }
     return res.redirect("/loginAdmin");
   }

@@ -58,10 +58,10 @@
                                                 cellspacing="0">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width: 50%;">Tên người dùng</th>
-                                                        <th style="text-align: center;">Email</th>
+                                                        <th style="width: 50%;">Email</th>
                                                         <th style="text-align: center;">UserName</th>
-                                                        <th style="text-align: center; width: 10%;">Chỉnh sửa</th>
+                                                        <th style="text-align: center;">Avatar</th>
+                                                        <th style="text-align: center;">Role</th>
                                                         <th style="text-align: center; width: 10%;">Xóa người dùng</th>
 
                                                     </tr>
@@ -72,28 +72,21 @@
 
                                                             <tr>
                                                                 <td>
-                                                                    <%= user.name %>
-                                                                </td>
-                                                                <td style="text-align: center;">
                                                                     <%= user.email %>
                                                                 </td>
                                                                 <td style="text-align: center;">
                                                                     <%= user.username %>
                                                                 </td>
-
                                                                 <td style="text-align: center;">
 
-                                                                    <a href="/admin/user/update/<%= user.id %>">
-                                                                        <button type="button"
-                                                                            style="border: none; background-color: transparent; width: auto;"
-                                                                            value="">
-
-                                                                            <i style="color:  #858796;"
-                                                                                class="fas fa-pen"></i>
-                                                                        </button>
-                                                                    </a>
+                                                                    <%= (!user.avatar || user.avatar.length === 0) ? "chưa có avatar" : user.avatar %>
 
                                                                 </td>
+
+                                                                <td style="text-align: center;">
+                                                                    <%= user.role %>
+                                                                </td>
+
                                                                 <td style="text-align: center;">
                                                                     <a href="/admin/user/delete/<%= user.id %>">
                                                                         <button type="button"
