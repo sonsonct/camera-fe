@@ -22,6 +22,8 @@ app.use(
     cookie: { maxAge: 60000 },
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
 
 configViewEngine(app);
@@ -141,28 +143,26 @@ passport.use(
   )
 );
 
+//Use "GoogleStrategy" as the Authentication Strategy
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: process.env.CALL_BACK_GG,
+      passReqToCallback: true,
     },
-    function (accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        const { name, emails, id } = profile;
-        const user = {
-          email: emails,
-          firstName: name.givenName,
-          lastName: name.familyName,
-          id: id,
-        };
-        const payload = {
-          user,
-          accessToken,
-        };
-        return done(null, payload);
-      });
+    (request, accessToken, refreshToken, profile, done) => {
+      const { emails, photos, id } = profile;
+      //console.log(profile);
+      const user = {
+        email: emails[0].value,
+        picture: photos[0].value,
+        id: id,
+        accessToken,
+      };
+      //console.log(user);
+      return done(null, user);
     }
   )
 );
