@@ -22,13 +22,10 @@ router.get(
   apiAuth.handleLoginFB
 );
 
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+router.get("/auth/google", passport.authenticate("google", { scope: "email" }));
 
 router.get(
-  "/auth/google/callback",
+  "/auth/google/redirect",
   passport.authenticate("google", {}),
   apiAuth.handleLoginGG
 );

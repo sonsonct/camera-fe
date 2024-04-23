@@ -107,12 +107,12 @@ const handleLoginFB = async (req, res) => {
       dataUser: req["user"],
     });
 
-    console.log(data.data);
+    //console.log(data.data);
     if (data.data.statusCode !== 200) {
       req.flash("erro", `${data.data.message}`);
     }
 
-    console.log(data.data.data.accessToken);
+    //console.log(data.data.data.accessToken);
 
     if (data.data.statusCode == 200) {
       req.flash("success", `${data.data.message}`);
@@ -132,18 +132,19 @@ const handleLoginFB = async (req, res) => {
 
 const handleLoginGG = async (req, res) => {
   try {
-    console.log(req["user"]);
-    return;
-    let data = await axios.post(process.env.BASE_URL + `user/auth/faceboock`, {
+    //console.log(req["user"]);
+
+    let data = await axios.post(process.env.BASE_URL + `user/auth/google`, {
       dataUser: req["user"],
     });
 
-    console.log(data.data);
+    //console.log(data.data);
+
     if (data.data.statusCode !== 200) {
       req.flash("erro", `${data.data.message}`);
     }
 
-    console.log(data.data.data.accessToken);
+    //console.log(data.data.data.accessToken);
 
     if (data.data.statusCode == 200) {
       req.flash("success", `${data.data.message}`);
