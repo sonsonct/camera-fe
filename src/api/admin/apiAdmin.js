@@ -33,11 +33,19 @@ const verifyToken = (token) => {
 };
 const getHome = async (req, res) => {
   try {
-    // let Statistics = await axios.get(process.env.BASE_URL + `getStatistics`);
-    // // let statisticsByMonht = await axios.get(process.env.BASE_URL + `getStatisticsByMonth`);
-    // // let statisticsByYear = await axios.get(process.env.BASE_URL + `getStatisticsByYear`);
+    let Statistics = await axios.get(
+      process.env.BASE_URL + `statistical/month`
+    );
+    let statisticsByMonht = await axios.get(
+      process.env.BASE_URL + `statistical?filter=MONTHLY`
+    );
+    let statisticsByYear = await axios.get(
+      process.env.BASE_URL + `statistical?filter=YEARLY`
+    );
     // // let order_productDesc = await axios.get(process.env.BASE_URL + `getTopProductSale`);
-    // // let categoriesSale = await axios.get(process.env.BASE_URL + `getProductCategory`);
+    let categoriesSale = await axios.get(
+      process.env.BASE_URL + `public/categories/count`
+    );
     // // let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
     // let product = await axios.get(process.env.BASE_URL + `getProductAdmin`);
     // let expired = await axios.get(process.env.BASE_URL + `expired`);
@@ -50,12 +58,12 @@ const getHome = async (req, res) => {
     //console.log(categoriesSale.data.product)
     //console.log(productAllRate.data)
     return res.render("admin/indexAdmin.ejs", {
-      // Statistics: Statistics.data.Statistics,
-      // statisticsByMonht: Monht,
-      // statisticsByYear: Year,
+      Statistics: Statistics.data.data,
+      statisticsByMonht: statisticsByMonht.data.data,
+      statisticsByYear: statisticsByYear.data.data,
       // order_productDesc: product.data.getTopProductSale,
-      // categoriesSale: product.data.getProductCategory,
-      // countAllRate: Statistics.data.countrate,
+      categoriesSale: categoriesSale.data.data,
+      countAllRate: 3,
       // productAllRate: product.data.getProductRate,
       // expired: expired.data.product,
       // saleprd: expired.data.sale,
