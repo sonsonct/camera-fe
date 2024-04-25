@@ -47,7 +47,7 @@ const getHome = async (req, res) => {
       process.env.BASE_URL + `public/categories/count`
     );
     // // let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
-    // let product = await axios.get(process.env.BASE_URL + `getProductAdmin`);
+    let products = await axios.get(process.env.BASE_URL + `products/hot`);
     // let expired = await axios.get(process.env.BASE_URL + `expired`);
     //let countAllRate = await axios.get(process.env.BASE_URL + `countRate`);
     //console.log("rate:", expired.data.product);
@@ -61,7 +61,7 @@ const getHome = async (req, res) => {
       Statistics: Statistics.data.data,
       statisticsByMonht: statisticsByMonht.data.data,
       statisticsByYear: statisticsByYear.data.data,
-      // order_productDesc: product.data.getTopProductSale,
+      order_productDesc: products.data.data.data,
       categoriesSale: categoriesSale.data.data,
       countAllRate: 3,
       // productAllRate: product.data.getProductRate,

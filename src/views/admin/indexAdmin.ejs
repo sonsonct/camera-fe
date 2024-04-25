@@ -160,10 +160,10 @@
                                             const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
 
                                         %>
-                                            <% colors.forEach(function(color, index) { 
+                                            <% categoriesSale.forEach(function(items, index) { 
                                                 %>
                                                 <span class="mr-2">
-                                                    <i class="fas fa-circle" style="color: <%= color %>;"></i> <%= categoriesSale.categoryName %>
+                                                    <i class="fas fa-circle" style="color: <%= colors[index] %>;"></i> <%= items.categoryName %>
                                                 </span>
                                             <% }); %>    
                                             
@@ -368,8 +368,8 @@
                                                 
                 <% order_productDesc.forEach(function(product) { %>
                     data.push({
-                        sold_quantity: <%= product.sold_quantity %>,
-                        name: "<%= product.Product.name %>"
+                        sold_quantity: <%= product.sum %>,
+                        name: "<%= product.productName %>"
                     });
                 <% }); %>
         <% } else { %>
@@ -377,7 +377,7 @@
         
         
 
-        const itemsPerPage = 4; // Số lượng sản phẩm trên mỗi trang
+        const itemsPerPage = 4  ; // Số lượng sản phẩm trên mỗi trang
         let currentPage = 1; // Trang hiện tại
 
         const dataContainer = document.getElementById("data-container");
@@ -429,17 +429,21 @@
         // đã bán theo danh mục
         var ctx = document.getElementById("myPieChart");
         var datasale = []
+        var lables = []
         <% if (typeof categoriesSale !== "undefined" && categoriesSale.length > 0) { %>
                                                 
                 <% categoriesSale.forEach(function(categories) { %>
-                    datasale.push(<%= categories.sold_count %>);
+                    datasale.push(<%= categories.count %>);
+                    lables.push("<%= categories.categoryName %>");
+                    
                 <% }); %>
         <% } else { %>
         <% } %>
+        console.log("xxxx",lables);
         var myPieChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ["Sữa Rửa Mặt", "Kem Chống Nắng", "Serum", "Tẩy Trang", "Son", "Kẻ Mắt"],
+            labels: lables,
             datasets: [{
             data: datasale,
             backgroundColor: ["red", "orange", "yellow", "green", "blue", "indigo", "violet"],
