@@ -42,11 +42,12 @@ const getHome = async (req, res) => {
     let statisticsByYear = await axios.get(
       process.env.BASE_URL + `statistical?filter=YEARLY`
     );
-    // // let order_productDesc = await axios.get(process.env.BASE_URL + `getTopProductSale`);
     let categoriesSale = await axios.get(
       process.env.BASE_URL + `public/categories/count`
     );
-    // // let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
+    let productAllRate = await axios.get(
+      process.env.BASE_URL + `public/comments`
+    );
     let products = await axios.get(process.env.BASE_URL + `products/hot`);
     // let expired = await axios.get(process.env.BASE_URL + `expired`);
     //let countAllRate = await axios.get(process.env.BASE_URL + `countRate`);
@@ -63,8 +64,7 @@ const getHome = async (req, res) => {
       statisticsByYear: statisticsByYear.data.data,
       order_productDesc: products.data.data.data,
       categoriesSale: categoriesSale.data.data,
-      countAllRate: 3,
-      // productAllRate: product.data.getProductRate,
+      productAllRate: productAllRate.data.data.data,
       // expired: expired.data.product,
       // saleprd: expired.data.sale,
     });

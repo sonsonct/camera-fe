@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('./block/header.ejs') %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 <body id="page-top">
 
@@ -99,14 +100,14 @@
                         </div> -->
 
                         <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-3 col-md-6 mb-4" data-bs-toggle="modal" data-bs-target="#customModal">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Số lượt đánh giá</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= countAllRate %></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><%= productAllRate.length %></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -116,6 +117,52 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="customModalLabel">Lượt đánh giá</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <% if(productAllRate.length>0){ %>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Đánh giá</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">user</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% productAllRate.forEach((items)=>{ %>
+
+                    
+                  <tr>
+                    <td><a href="/detail/<%= items.products.id %>"><%= items.products.productName %></a></td>
+                    <td><%= items.content %></td>
+                    <td><%= items.rate %></td>
+                    <td><%= items.user.username %></td>
+                  </tr>
+
+                  <% }) %>
+                </tbody>
+              </table>
+              <% } else { %>
+                <p>Chưa có đánh giá nào</p>
+             <% } %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
                     <!-- Content Row -->
 
